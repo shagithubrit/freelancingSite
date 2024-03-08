@@ -1,7 +1,10 @@
 import React from "react";
 import { AppBar } from "@material-ui/core";
 import { Toolbar } from "@material-ui/core";
-import {useScrollTrigger} from "@material-ui/core";
+import { useScrollTrigger } from "@material-ui/core";
+// import { Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
+import logo from "../../assets/logo.svg";
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -11,7 +14,6 @@ function ElevationScroll(props) {
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
-    
   });
 
   return React.cloneElement(children, {
@@ -19,14 +21,27 @@ function ElevationScroll(props) {
   });
 }
 
+const useStyles = makeStyles((theme) => ({
+  toolbarMargin: {
+    ...theme.mixins.toolbar,
+  },
+  logo: {
+    height: '7em',
+  },
+}));
+
 export default function Header(props) {
+  const classes = useStyles();
   return (
-    <>
-    <ElevationScroll>
-    <AppBar >
-      <Toolbar>Arc Development</Toolbar>
-    </AppBar>
-    </ElevationScroll>
-    </>
+    <React.Fragment>
+      <ElevationScroll>
+        <AppBar position="fixed">
+          <Toolbar  disableGutters  >
+            <img alt="company logo" src={logo} className={classes.logo} />
+          </Toolbar>
+        </AppBar>
+      </ElevationScroll>
+      <div className={classes.toolbarMargin} />
+    </React.Fragment>
   );
 }
