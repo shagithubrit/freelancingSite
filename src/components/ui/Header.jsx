@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar } from "@material-ui/core";
 import { Toolbar } from "@material-ui/core";
 import { useScrollTrigger } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
 import { Tabs } from "@material-ui/core";
-import {Button} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 // import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import logo from "../../assets/logo.svg";
+import { Link } from "react-router-dom";
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -27,7 +28,13 @@ const useStyles = makeStyles((theme) => ({
     ...theme.mixins.toolbar,
   },
   logo: {
-    height: "7em",
+    height: "8em",
+  },
+  logoContainer: {
+    padding: 0,
+    "&:hover": {
+      backgroundColor: "transparent"
+    }
   },
   tabContainer: {
     marginLeft: "auto",
@@ -36,39 +43,94 @@ const useStyles = makeStyles((theme) => ({
     // this will add the styling props of theme from Theme.js
     ...theme.typography.tab,
     minWidth: 10,
-    marginLeft: "25px"
+    marginLeft: "25px",
   },
   button: {
     ...theme.typography.estimate,
-    borderRadius : '50px',
-    marginLeft :'50px',
-    marginRight: '25px',
-    height: '45px',
-  }
+    borderRadius: "50px",
+    marginLeft: "50px",
+    marginRight: "25px",
+    height: "45px",
+  },
 }));
 
 export default function Header(props) {
   const classes = useStyles();
-  const [value, setValue]=useState(0);
+  const [value, setValue] = useState(0);
 
-  const handleChange=(e,value)=>{
+  const handleChange = (e, value) => {
     setValue(value);
-  }
+  };
+
+  // this is added to resolve the bug of random rendering of data from random tabPanels in tabs
+  useEffect(() => {
+    if (window.location.pathname === "/" && value !== 0) {
+      setValue(0);
+    } else if (window.location.pathname === "/services" && value !== 0) {
+      setValue(1);
+    } else if (window.location.pathname === "/revolution" && value !== 0) {
+      setValue(2);
+    } else if (window.location.pathname === "/about" && value !== 0) {
+      setValue(3);
+    } else if (window.location.pathname === "/contact" && value !== 0) {
+      setValue(4);
+    } else if (window.location.pathname === "/estimate" && value !== 0) {
+      setValue(5);
+    }
+  }, [value]);
 
   return (
     <React.Fragment>
       <ElevationScroll>
         <AppBar position="fixed">
           <Toolbar disableGutters>
-            <img alt="company logo" src={logo} className={classes.logo} />
-            <Tabs value={value} onChange={handleChange} className={classes.tabContainer} indicatorColor='secondary'>
-              <Tab className={classes.tab} label="Home"></Tab>
-              <Tab className={classes.tab} label=" Services"></Tab>
-              <Tab className={classes.tab} label="The Revolution"></Tab>
-              <Tab className={classes.tab} label="About Us"></Tab>
-              <Tab className={classes.tab} label="Contact Us"></Tab>
+            <Button disableRipple component={Link} to="/" onClick={()=> setValue(0)} className={classes.logoContainer} >
+              <img alt="company logo" src={logo} className={classes.logo} />
+            </Button>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              className={classes.tabContainer}
+              indicatorColor="secondary"
+            >
+              <Tab
+                className={classes.tab}
+                component={Link}
+                to="/"
+                label="Home"
+              ></Tab>
+              <Tab
+                className={classes.tab}
+                component={Link}
+                to="/services"
+                label=" Services"
+              ></Tab>
+              <Tab
+                className={classes.tab}
+                component={Link}
+                to="/revolution"
+                label="The Revolution"
+              ></Tab>
+              <Tab
+                className={classes.tab}
+                component={Link}
+                to="/about"
+                label="About Us"
+              ></Tab>
+              <Tab
+                className={classes.tab}
+                component={Link}
+                to="/contact"
+                label="Contact Us"
+              ></Tab>
             </Tabs>
-            <Button variant="contained" color="secondary" className={classes.button}>Free Estimate </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              className={classes.button}
+            >
+              Free Estimate{" "}
+            </Button>
           </Toolbar>
         </AppBar>
       </ElevationScroll>
