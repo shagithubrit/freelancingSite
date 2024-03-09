@@ -1,18 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { AppBar } from "@material-ui/core";
 import { Toolbar } from "@material-ui/core";
 import { useScrollTrigger } from "@material-ui/core";
 import { Tab } from "@material-ui/core";
 import { Tabs } from "@material-ui/core";
+import {Button} from "@material-ui/core";
 // import { Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import logo from "../../assets/logo.svg";
 
 function ElevationScroll(props) {
   const { children } = props;
-  // Note that you normally won't need to set the window ref as useScrollTrigger
-  // will default to window.
-  // This is only being set here because the demo is in an iframe.
+
   const trigger = useScrollTrigger({
     disableHysteresis: true,
     threshold: 0,
@@ -39,23 +38,37 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 10,
     marginLeft: "25px"
   },
+  button: {
+    ...theme.typography.estimate,
+    borderRadius : '50px',
+    marginLeft :'50px',
+    marginRight: '25px',
+    height: '45px',
+  }
 }));
 
 export default function Header(props) {
   const classes = useStyles();
+  const [value, setValue]=useState(0);
+
+  const handleChange=(e,value)=>{
+    setValue(value);
+  }
+
   return (
     <React.Fragment>
       <ElevationScroll>
         <AppBar position="fixed">
           <Toolbar disableGutters>
             <img alt="company logo" src={logo} className={classes.logo} />
-            <Tabs className={classes.tabContainer}>
+            <Tabs value={value} onChange={handleChange} className={classes.tabContainer} indicatorColor='secondary'>
               <Tab className={classes.tab} label="Home"></Tab>
               <Tab className={classes.tab} label=" Services"></Tab>
               <Tab className={classes.tab} label="The Revolution"></Tab>
               <Tab className={classes.tab} label="About Us"></Tab>
               <Tab className={classes.tab} label="Contact Us"></Tab>
             </Tabs>
+            <Button variant="contained" color="secondary" className={classes.button}>Free Estimate </Button>
           </Toolbar>
         </AppBar>
       </ElevationScroll>
