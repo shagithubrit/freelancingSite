@@ -9,6 +9,8 @@ import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
 import logo from "../../assets/logo.svg";
 import { Link } from "react-router-dom";
+import { Menu } from "@material-ui/core";
+import { MenuItem } from "@material-ui/core";
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -33,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
   logoContainer: {
     padding: 0,
     "&:hover": {
-      backgroundColor: "transparent"
-    }
+      backgroundColor: "transparent",
+    },
   },
   tabContainer: {
     marginLeft: "auto",
@@ -57,9 +59,21 @@ const useStyles = makeStyles((theme) => ({
 export default function Header(props) {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [open, setOpen] = useState(false); // for the visibility of menu
 
   const handleChange = (e, value) => {
     setValue(value);
+  };
+
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+    setOpen(true);
+  };
+
+  const handleClose = (e) => {
+    setAnchorEl(null);
+    setOpen(false);
   };
 
   // this is added to resolve the bug of random rendering of data from random tabPanels in tabs
@@ -84,7 +98,13 @@ export default function Header(props) {
       <ElevationScroll>
         <AppBar position="fixed">
           <Toolbar disableGutters>
-            <Button disableRipple component={Link} to="/" onClick={()=> setValue(0)} className={classes.logoContainer} >
+            <Button
+              disableRipple
+              component={Link}
+              to="/"
+              onClick={() => setValue(0)}
+              className={classes.logoContainer}
+            >
               <img alt="company logo" src={logo} className={classes.logo} />
             </Button>
             <Tabs
@@ -100,8 +120,11 @@ export default function Header(props) {
                 label="Home"
               ></Tab>
               <Tab
+                aria-owns={anchorEl ? "simple-menu" : undefined}
+                aria-haspopup={anchorEl ? "true" : undefined}
                 className={classes.tab}
                 component={Link}
+                onMouseOver={(event) => handleClick(event)}
                 to="/services"
                 label=" Services"
               ></Tab>
@@ -131,6 +154,54 @@ export default function Header(props) {
             >
               Free Estimate{" "}
             </Button>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{ onMouseLeave: handleClose }}
+            >
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  setValue(1);
+                }}
+                component={Link}
+                to="/services"
+              >
+                Services
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  setValue(1);
+                }}
+                component={Link}
+                to="/customsoftware"
+              >
+                Custom Software Development
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  setValue(1);
+                }}
+                component={Link}
+                to="/mobileapps"
+              >
+                Mobile App Development
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  setValue(1);
+                }}
+                component={Link}
+                to="/websites"
+              >
+                Web Development
+              </MenuItem>
+            </Menu>
           </Toolbar>
         </AppBar>
       </ElevationScroll>
